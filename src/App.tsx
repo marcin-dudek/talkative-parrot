@@ -1,58 +1,102 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import cloudflareLogo from './assets/Cloudflare_Logo.svg'
-import './App.css'
+// src/App.tsx
 
-function App() {
-  const [count, setCount] = useState(0)
-  const [name, setName] = useState('unknown')
+import { useState } from "react";
+import { NavigationMenu } from "./components/navbar";
+import { BookA, Ruler } from "lucide-react";
+import "./App.css";
+import worker from "./components/worker";
+
+interface SearchItem {
+  item: string;
+  score: number;
+}
+
+const App = () => {
+  const [results, setResults] = useState<SearchItem[]>([]);
+  const [length, setLength] = useState("6");
+  const [error, setError] = useState<string | null>(null);
+  const [word, setWord] = useState("");
+
+  const search = async () => {
+    worker.onmessage = async (event) => {
+      if (event.data.error) {
+        setError(event.data.error);
+        setResults([]);
+        return;
+      }
+      const data = event.data as { results: SearchItem[] };
+      setResults(data.results);
+      setError(null);
+    };
+    worker.postMessage({ word, length });
+  };
 
   return (
     <>
-      <div>
-        <a href='https://vite.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-        <a href='https://workers.cloudflare.com/' target='_blank'>
-          <img src={cloudflareLogo} className='logo cloudflare' alt='Cloudflare logo' />
-        </a>
+      <div className="flex flex-col min-h-screen max-md:w-full md:max-w-7xl p-4 mx-auto items-center">
+        <NavigationMenu />
+        <br />
+        <div className="card w-96 bg-base-100 card-md shadow-sm">
+          <div className="card-body">
+            <label className="input">
+              <BookA />
+              <input
+                type="text"
+                className="grow"
+                placeholder="word"
+                onChange={(e) => setWord(e.target.value)}
+              />
+            </label>
+            <label className="input">
+              <Ruler />
+              <input
+                type="number"
+                className="grow"
+                placeholder=""
+                value={length}
+                onChange={(e) => setLength(e.target.value)}
+              />
+            </label>
+            <div className="justify-end card-actions">
+              <button className="btn btn-primary" onClick={search}>
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div className="card">
+          <div className="overflow-x-auto">
+            <table className="table table-xs">
+              <thead>
+                <tr>
+                  <th colSpan={2}>Search Results ({results.length}):</th>
+                </tr>
+              </thead>
+              <tbody>
+                {error && (
+                  <tr>
+                    <td className="text-error" colSpan={2}>{error}</td>
+                  </tr>
+                )}
+                {results.map((x, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{x.item}</td>
+                  </tr>
+                ))}
+                {!error && results.length === 0 && (
+                  <tr>
+                    <td colSpan={2}>No results</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React + Cloudflare</h1>
-      <div className='card'>
-        <button
-          onClick={() => setCount((count) => count + 1)}
-          aria-label='increment'
-        >
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <div className='card'>
-        <button
-          onClick={() => {
-            fetch('/api/')
-              .then((res) => res.json() as Promise<{ name: string }>)
-              .then((data) => setName(data.name))
-          }}
-          aria-label='get name'
-        >
-          Name from API is: {name}
-        </button>
-        <p>
-          Edit <code>worker/index.ts</code> to change the name
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
