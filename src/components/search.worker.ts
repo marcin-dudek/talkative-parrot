@@ -37,8 +37,11 @@ self.onmessage = async (event: MessageEvent) => {
             useExtendedSearch: true,
         });
 
-        const result = fuse.search(`^${event.data.word}`);
-        self.postMessage({ results: result });
+        let results = fuse.search(`^${event.data.word}`);
+        if (event.data.letters) {
+            results = results.filter((x) => x.item.split('').every((char) => event.data.letters.includes(char)));
+        }
+        self.postMessage({ results });
     } catch (error: any) {
         self.postMessage({ error: error.message });
     }

@@ -1,8 +1,6 @@
-// src/App.tsx
-
 import { useState } from "react";
 import { NavigationMenu } from "./components/navbar";
-import { BookA, Ruler } from "lucide-react";
+import { ALargeSmall, BookA, Ruler } from "lucide-react";
 import "./App.css";
 import worker from "./components/worker";
 
@@ -14,6 +12,7 @@ interface SearchItem {
 const App = () => {
   const [results, setResults] = useState<SearchItem[]>([]);
   const [length, setLength] = useState("6");
+  const [letters, setLetters] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [word, setWord] = useState("");
 
@@ -28,7 +27,7 @@ const App = () => {
       setResults(data.results);
       setError(null);
     };
-    worker.postMessage({ word, length });
+    worker.postMessage({ word, length, letters });
   };
 
   return (
@@ -43,7 +42,7 @@ const App = () => {
               <input
                 type="text"
                 className="grow"
-                placeholder="word"
+                placeholder="prefix"
                 onChange={(e) => setWord(e.target.value)}
               />
             </label>
@@ -55,6 +54,16 @@ const App = () => {
                 placeholder=""
                 value={length}
                 onChange={(e) => setLength(e.target.value)}
+              />
+            </label>
+            <label className="input">
+              <ALargeSmall />
+              <input
+                type="text"
+                className="grow"
+                placeholder="letters"
+                value={letters}
+                onChange={(e) => setLetters(e.target.value)}
               />
             </label>
             <div className="justify-end card-actions">
