@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavigationMenu } from "./components/navbar";
-import { ALargeSmall, BookA, Ruler } from "lucide-react";
+import { ALargeSmall, BookA, BookPlus, Ruler } from "lucide-react";
 import "./App.css";
 import worker from "./components/worker";
 
@@ -74,7 +74,7 @@ const App = () => {
           </div>
         </div>
         <br />
-        <div className="card">
+        {/* <div className="card">
           <div className="overflow-x-auto">
             <table className="table table-xs">
               <thead>
@@ -102,7 +102,36 @@ const App = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        </div> */}
+        <br/>
+        <ul className="list rounded-box shadow-md"> 
+          {results.map((x, index) => (
+            <li className="list-row" key={index}>
+              <div className="size-[1em] font-thin opacity-30 tabular-nums">{index +1}</div>
+              <div className="list-col-grow">
+                <div>{x.item}</div>
+              </div>
+              <a className="btn btn-xs btn-square btn-ghost" href={`https://sjp.pl/${x.item}`} target="_blank">
+                <BookPlus size={12} />
+              </a>
+            </li>
+          ))}
+          {error && (
+            <li className="list-row">
+              <div className="list-col-grow">
+                <div className="text-error">{error}</div>
+              </div>
+            </li>
+          )}
+
+          {!error && results.length === 0 && (
+            <li className="list-row">
+              <div className="list-col-grow">
+                <div>No result</div>
+              </div>
+            </li>
+          )}
+        </ul>
       </div>
     </>
   );
