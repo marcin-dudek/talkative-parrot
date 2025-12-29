@@ -15,6 +15,7 @@ const App = () => {
   const [letters, setLetters] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [word, setWord] = useState("");
+  const [wordDefinitions, setWordDefinitions] = useState<(string[]|null)[]>([]);
 
   const search = async () => {
     worker.onmessage = async (event) => {
@@ -25,9 +26,19 @@ const App = () => {
       }
       const data = event.data as { results: SearchItem[] };
       setResults(data.results);
+      setWordDefinitions(Array.from({length: data.results.length}, () => null));
       setError(null);
     };
     worker.postMessage({ word, length, letters });
+  };
+
+  const wordDefinition= async (index: number, word: string) => {
+    const response = await fetch(`/api/${word}`);
+    const data = await response.json();
+    console.log(data);
+    const newDefinitions = [...wordDefinitions];
+    newDefinitions[index] = data.definitions;
+    setWordDefinitions(newDefinitions);
   };
 
   return (
@@ -73,47 +84,32 @@ const App = () => {
             </div>
           </div>
         </div>
-        <br />
-        {/* <div className="card">
-          <div className="overflow-x-auto">
-            <table className="table table-xs">
-              <thead>
-                <tr>
-                  <th colSpan={2}>Search Results ({results.length}):</th>
-                </tr>
-              </thead>
-              <tbody>
-                {error && (
-                  <tr>
-                    <td className="text-error" colSpan={2}>{error}</td>
-                  </tr>
-                )}
-                {results.map((x, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{x.item}</td>
-                  </tr>
-                ))}
-                {!error && results.length === 0 && (
-                  <tr>
-                    <td colSpan={2}>No results</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div> */}
         <br/>
-        <ul className="list rounded-box shadow-md"> 
+        <ul className="list rounded-box shadow-md w-96"> 
           {results.map((x, index) => (
             <li className="list-row" key={index}>
-              <div className="size-[1em] font-thin opacity-30 tabular-nums">{index +1}</div>
+              <div className="w-[2em] font-thin opacity-30 tabular-nums">{index +1}</div>
               <div className="list-col-grow">
+                
                 <div>{x.item}</div>
               </div>
-              <a className="btn btn-xs btn-square btn-ghost" href={`https://sjp.pl/${x.item}`} target="_blank">
-                <BookPlus size={12} />
-              </a>
+              {wordDefinitions[index] && (
+                <ul className="list-col-wrap list-disc text-xs">
+                  {wordDefinitions[index]?.map((def, defIndex) => (
+                    <li key={defIndex} className="text-sm">{def}</li>
+                  ))}
+                </ul>
+              )}
+              {
+                  wordDefinitions[index] ? 
+                  <p className="btn btn-xs btn-square btn-ghost btn-disabled">
+                    <BookPlus size={12} />
+                  </p>
+                  : 
+                  <a className="btn btn-xs btn-square btn-ghost" onClick={() => wordDefinition(index,x.item)}>
+                    <BookPlus size={12} />
+                  </a>
+                }
             </li>
           ))}
           {error && (
