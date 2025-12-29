@@ -33,7 +33,7 @@ const App = () => {
   };
 
   const wordDefinition= async (index: number, word: string) => {
-    const response = await fetch(`/api/${word}`);
+    const response = await fetch(`/api/definition/${word}`);
     const data = await response.json();
     console.log(data);
     const newDefinitions = [...wordDefinitions];
