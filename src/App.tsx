@@ -90,13 +90,12 @@ const App = () => {
             <li className="list-row" key={index}>
               <div className="w-[2em] font-thin opacity-30 tabular-nums">{index +1}</div>
               <div className="list-col-grow">
-                
                 <div>{x.item}</div>
               </div>
               {wordDefinitions[index] && (
                 <ul className="list-col-wrap list-disc text-xs">
                   {wordDefinitions[index]?.map((def, defIndex) => (
-                    <li key={defIndex} className="text-sm">{def}</li>
+                    <li key={defIndex} className="text-xs">{def}</li>
                   ))}
                 </ul>
               )}
