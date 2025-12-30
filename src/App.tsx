@@ -7,6 +7,8 @@ import worker from "./components/worker";
 interface SearchItem {
   item: string;
   score: number;
+  definitions: string[] | null;
+  isVisible: boolean;
 }
 
 const App = () => {
@@ -15,7 +17,6 @@ const App = () => {
   const [letters, setLetters] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [word, setWord] = useState("");
-  const [wordDefinitions, setWordDefinitions] = useState<(string[]|null)[]>([]);
 
   const search = async () => {
     worker.onmessage = async (event) => {
@@ -26,19 +27,17 @@ const App = () => {
       }
       const data = event.data as { results: SearchItem[] };
       setResults(data.results);
-      setWordDefinitions(Array.from({length: data.results.length}, () => null));
       setError(null);
     };
     worker.postMessage({ word, length, letters });
   };
 
-  const wordDefinition= async (index: number, word: string) => {
+  const wordDefinition = async (index: number, word: string) => {
     const response = await fetch(`/api/definition/${word}`);
     const data = await response.json();
-    console.log(data);
-    const newDefinitions = [...wordDefinitions];
-    newDefinitions[index] = data.definitions;
-    setWordDefinitions(newDefinitions);
+    const r = [...results];
+    r[index] = { ...r[index], definitions: data.definitions, isVisible: true };
+    setResults(r);
   };
 
   return (
@@ -84,31 +83,37 @@ const App = () => {
             </div>
           </div>
         </div>
-        <br/>
-        <ul className="list rounded-box shadow-md w-96"> 
+        <br />
+        <ul className="list rounded-box shadow-md w-96">
           {results.map((x, index) => (
             <li className="list-row" key={index}>
-              <div className="w-[2em] font-thin opacity-30 tabular-nums">{index +1}</div>
+              <div className="w-[2em] font-thin opacity-30 tabular-nums">
+                {index + 1}
+              </div>
               <div className="list-col-grow">
                 <div>{x.item}</div>
               </div>
-              {wordDefinitions[index] && (
+              {x.definitions && (
                 <ul className="list-col-wrap list-disc text-xs">
-                  {wordDefinitions[index]?.map((def, defIndex) => (
-                    <li key={defIndex} className="text-xs">{def}</li>
+                  {x.definitions.map((def, defIndex) => (
+                    <li key={defIndex} className="text-xs">
+                      {def}
+                    </li>
                   ))}
                 </ul>
               )}
-              {
-                  wordDefinitions[index] ? 
-                  <p className="btn btn-xs btn-square btn-ghost btn-disabled">
-                    <BookPlus size={12} />
-                  </p>
-                  : 
-                  <a className="btn btn-xs btn-square btn-ghost" onClick={() => wordDefinition(index,x.item)}>
-                    <BookPlus size={12} />
-                  </a>
-                }
+              {x.definitions ? (
+                <p className="btn btn-xs btn-square btn-ghost btn-disabled">
+                  <BookPlus size={12} />
+                </p>
+              ) : (
+                <a
+                  className="btn btn-xs btn-square btn-ghost"
+                  onClick={() => wordDefinition(index, x.item)}
+                >
+                  <BookPlus size={12} />
+                </a>
+              )}
             </li>
           ))}
           {error && (
