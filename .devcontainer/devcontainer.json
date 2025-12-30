@@ -19,7 +19,8 @@
         "editor.formatOnSave": true,
         "editor.formatOnPaste": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "material-icon-theme.activeIconPack": "react"
+        "material-icon-theme.activeIconPack": "react",
+        "git.autofetch": true
       }
     }
   }
