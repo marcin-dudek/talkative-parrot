@@ -15,8 +15,11 @@
             ]
         },
         "settings": {
-            "terminal.integrated.defaultProfile.linux": "bash",
-            "workbench.iconTheme": "material-icon-theme"
+          "terminal.integrated.defaultProfile.linux": "bash",
+          "workbench.iconTheme": "material-icon-theme",
+          "editor.formatOnSave": true,
+          "editor.formatOnPaste": true,
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
         }
     }
 }
