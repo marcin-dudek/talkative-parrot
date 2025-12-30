@@ -1,25 +1,26 @@
 {
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-    "features": {
-        "ghcr.io/alertbox/oven-sh/bun:1": {},
-        "ghcr.io/devcontainers/features/node:1": {},
-        "ghcr.io/devcontainers/features/git:1": {},
-        "ghcr.io/devcontainers/features/git-lfs:1": {}
-    },
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "esbenp.prettier-vscode",
-                "PKief.material-icon-theme",
-                "pflannery.vscode-versionlens"
-            ]
-        },
-        "settings": {
-          "terminal.integrated.defaultProfile.linux": "bash",
-          "workbench.iconTheme": "material-icon-theme",
-          "editor.formatOnSave": true,
-          "editor.formatOnPaste": true,
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        }
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/alertbox/oven-sh/bun:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/git-lfs:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "PKief.material-icon-theme",
+        "pflannery.vscode-versionlens"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "workbench.iconTheme": "material-icon-theme",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "material-icon-theme.activeIconPack": "react"
+      }
     }
+  }
 }

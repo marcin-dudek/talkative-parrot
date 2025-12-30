@@ -7,9 +7,9 @@ const extractWord = (text: string) => {
   if (text.indexOf("<span") >= 0) {
     const item = cheerio.load(text);
     return item.text().trim();
-  } else {
-    return text.trim().replace(/;+$/, "");
   }
+
+  return text.trim().replace(/;+$/, "");
 };
 
 app.get("/api/definition/:word", async (c) => {
