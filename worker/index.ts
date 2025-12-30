@@ -1,4 +1,7 @@
 import * as cheerio from 'cheerio';
+import { Hono } from 'hono'
+
+const app = new Hono()
 
 const extractWord = (text: string) => {
   if (text.indexOf("<span")>=0){
@@ -9,33 +12,28 @@ const extractWord = (text: string) => {
   }
 }
 
-export default {
-  async fetch(request) {
-    const url = new URL(request.url);
+app.get('/api/definition/:word', async (c) => {
+  const word = c.req.param('word');
+  console.info("word:", word);
+  const response = await fetch(`https://sjp.pl/${word}`);
+  const html = cheerio.load(await response.text());
+  const items = html('p[style="margin: .5em 0; font: medium/1.4 sans-serif; max-width: 34em; "]');
 
-    if (url.pathname.startsWith("/api/definition/")) {
-        const word = url.pathname.replace("/api/definition/", "");
-        const response = await fetch(`https://sjp.pl/${word}`);
-        const html = cheerio.load(await response.text());
-        const items = html('p[style="margin: .5em 0; font: medium/1.4 sans-serif; max-width: 34em; "]');
-
-        let definitions: string[] = [];
-        items.each((_, element) => {
-          let text = html(element).html();
-          if (text?.indexOf('<br>') === -1) {
-            definitions.push(extractWord(text));
-          } else {
-            text?.split('<br>').forEach(line => {
-              definitions.push(extractWord(line.substring(2)))
-            });
-          }
-        });
-        
-        return Response.json({
-          word: word,
-          definitions: definitions
-        });
+  let definitions: string[] = [];
+  items.each((_, element) => {
+    let text = html(element).html();
+    if (text?.indexOf('<br>') === -1) {
+      definitions.push(extractWord(text));
+    } else {
+      text?.split('<br>').forEach(line => {
+        definitions.push(extractWord(line.substring(2)))
+      });
     }
-		return new Response(null, { status: 404 });
-  },
-} satisfies ExportedHandler<Env>;
+  });
+  return c.json({
+           word: word,
+          definitions: definitions
+  })
+})
+
+export default app
