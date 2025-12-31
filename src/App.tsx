@@ -1,4 +1,4 @@
-import { NavigationMenu } from "./components/navbar";
+import NavigationMenu from "./components/navbar";
 import "./App.css";
 import Search from "./components/search";
 import Words from "./components/words";
