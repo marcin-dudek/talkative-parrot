@@ -16,41 +16,53 @@ const Search = () => {
       }
       update(event.data.results, null);
     };
-    worker.postMessage({ prefix, length, letters });
+    worker.postMessage({
+      prefix: prefix.value,
+      length: length.value,
+      letters: letters.value,
+    });
   };
 
   return (
     <div className="card w-96 bg-base-100 card-md shadow-sm">
       <div className="card-body">
-        <label className="input">
+        <label
+          className={`floating-label input ${
+            prefix.error ? "input-error" : ""
+          }`}
+        >
           <BookA />
           <input
             type="text"
             className="grow"
-            placeholder="prefix"
+            placeholder="Prefix"
             onChange={(e) => setPrefix(e.target.value)}
-            value={prefix}
+            value={prefix?.value}
           />
+          <span>{prefix.error ? prefix.error : "Prefix"}</span>
         </label>
-        <label className="input">
+        <label className="floating-label input">
           <Ruler />
           <input
             type="number"
             className="grow"
-            placeholder=""
-            value={length}
+            min={3}
+            max={16}
+            value={length?.value}
             onChange={(e) => setLength(e.target.value)}
           />
+          <span>Length</span>
         </label>
-        <label className="input">
+        <label className="floating-label input">
           <ALargeSmall />
           <input
             type="text"
             className="grow"
-            placeholder="letters"
-            value={letters}
+            placeholder="Letters"
+            value={letters?.value}
             onChange={(e) => setLetters(e.target.value)}
           />
+          <span>{letters.error ? letters.error : "Letters"}</span>
         </label>
         <div className="justify-end card-actions">
           <button className="btn btn-primary" onClick={search}>
