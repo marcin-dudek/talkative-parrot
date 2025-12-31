@@ -14,7 +14,6 @@ const extractWord = (text: string) => {
 
 app.get("/api/definition/:word", async (c) => {
   const word = c.req.param("word");
-  console.info("word:", word);
   const response = await fetch(`https://sjp.pl/${word}`);
   const html = cheerio.load(await response.text());
   const items = html(
