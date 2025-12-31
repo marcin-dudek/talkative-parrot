@@ -1,8 +1,9 @@
-import { BookPlus } from "lucide-react";
+import { BookPlus, ChevronDown, ChevronUp } from "lucide-react";
 import useResultsStore from "../state/results";
 
 const Words = () => {
-  const { items, error, updateDefinitions } = useResultsStore();
+  const { items, error, updateDefinitions, updateVisibility } =
+    useResultsStore();
 
   const wordDefinition = async (index: number, word: string) => {
     const response = await fetch(`/api/definition/${word}`);
@@ -21,7 +22,7 @@ const Words = () => {
             <div className="list-col-grow">
               <div>{word.word}</div>
             </div>
-            {word.definitions && (
+            {word.definitions && word.isVisible && (
               <ul className="list-col-wrap list-disc text-xs">
                 {word.definitions.map((def, defIndex) => (
                   <li key={defIndex} className="text-xs">
@@ -31,9 +32,21 @@ const Words = () => {
               </ul>
             )}
             {word.definitions ? (
-              <p className="btn btn-xs btn-square btn-ghost btn-disabled">
-                <BookPlus size={12} />
-              </p>
+              word.isVisible ? (
+                <a
+                  className="btn btn-xs btn-square btn-ghost"
+                  onClick={() => updateVisibility(index, false)}
+                >
+                  <ChevronUp size={12} />
+                </a>
+              ) : (
+                <a
+                  className="btn btn-xs btn-square btn-ghost"
+                  onClick={() => updateVisibility(index, true)}
+                >
+                  <ChevronDown size={12} />
+                </a>
+              )
             ) : (
               <a
                 className="btn btn-xs btn-square btn-ghost"

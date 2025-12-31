@@ -15,6 +15,7 @@ interface Result {
 type ResultAction = {
   update: (items: ResultItem[], error: string | null) => void;
   updateDefinitions: (index: number, definitions: string[]) => void;
+  updateVisibility: (index: number, isVisible: boolean) => void;
 };
 
 const useResultsStore = create<Result & ResultAction>((set) => ({
@@ -29,6 +30,15 @@ const useResultsStore = create<Result & ResultAction>((set) => ({
         ...items[index],
         definitions: definitions,
         isVisible: true,
+      };
+      return { items };
+    }),
+  updateVisibility: (index: number, isVisible: boolean) =>
+    set((state) => {
+      const items = [...state.items];
+      items[index] = {
+        ...items[index],
+        isVisible: isVisible,
       };
       return { items };
     }),
