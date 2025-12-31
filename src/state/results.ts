@@ -8,7 +8,7 @@ interface ResultItem {
 }
 
 interface Result {
-  items: ResultItem[];
+  items: ResultItem[] | null;
   error: string | null;
 }
 
@@ -19,13 +19,13 @@ type ResultAction = {
 };
 
 const useResultsStore = create<Result & ResultAction>((set) => ({
-  items: [],
+  items: null,
   error: null,
   update: (results: ResultItem[], error: string | null) =>
     set(() => ({ items: [...results], error: error })),
   updateDefinitions: (index: number, definitions: string[]) =>
     set((state) => {
-      const items = [...state.items];
+      const items = [...(state.items ?? [])];
       items[index] = {
         ...items[index],
         definitions: definitions,
@@ -35,7 +35,7 @@ const useResultsStore = create<Result & ResultAction>((set) => ({
     }),
   updateVisibility: (index: number, isVisible: boolean) =>
     set((state) => {
-      const items = [...state.items];
+      const items = [...(state.items ?? [])];
       items[index] = {
         ...items[index],
         isVisible: isVisible,

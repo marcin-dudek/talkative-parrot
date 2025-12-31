@@ -8,6 +8,10 @@ const Search = () => {
     useSearchStore();
   const { update } = useResultsStore();
 
+  const isInputError = (e: string | null) => {
+    return `floating-label input ${e ? "input-error" : ""}`;
+  };
+
   const search = async () => {
     worker.onmessage = async (event) => {
       if (event.data.error) {
@@ -26,11 +30,8 @@ const Search = () => {
   return (
     <div className="card w-96 bg-base-100 card-md shadow-sm">
       <div className="card-body">
-        <label
-          className={`floating-label input ${
-            prefix.error ? "input-error" : ""
-          }`}
-        >
+        <h2 className="card-title">Search</h2>
+        <label className={isInputError(prefix.error)}>
           <BookA />
           <input
             type="text"
@@ -41,19 +42,19 @@ const Search = () => {
           />
           <span>{prefix.error ? prefix.error : "Prefix"}</span>
         </label>
-        <label className="floating-label input">
+        <label className={isInputError(length.error)}>
           <Ruler />
           <input
             type="number"
             className="grow"
-            min={3}
-            max={16}
+            min={2}
+            max={15}
             value={length?.value}
             onChange={(e) => setLength(e.target.value)}
           />
-          <span>Length</span>
+          <span>{length.error ? length.error : "Length"}</span>
         </label>
-        <label className="floating-label input">
+        <label className={isInputError(letters.error)}>
           <ALargeSmall />
           <input
             type="text"
