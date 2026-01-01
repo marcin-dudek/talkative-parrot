@@ -7,7 +7,7 @@ const Words = () => {
   return (
     <>
       {words && (
-        <div className="card bg-base-100 card-md shadow-sm h-full max-h-1/3">
+        <div className="card">
           <div className="card-body">
             <h2 className="card-title">Results ({words.length}):</h2>
             <ul className="list">
