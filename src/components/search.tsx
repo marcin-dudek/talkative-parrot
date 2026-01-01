@@ -1,7 +1,7 @@
 import { ALargeSmall, BookA, Ruler } from "lucide-react";
 import useSearchStore from "../state/search";
 import worker from "./worker";
-import useResultsStore from "../state/results";
+import { useResultsStore } from "../state/results";
 
 const Search = () => {
   const { prefix, length, letters, setPrefix, setLength, setLetters } =
