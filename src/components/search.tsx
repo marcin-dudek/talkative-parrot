@@ -9,7 +9,7 @@ const Search = () => {
   const { update } = useResultsStore();
 
   const isInputError = (e: string | null) => {
-    return `floating-label input ${e ? "input-error" : ""}`;
+    return `floating-label input mt-2 ${e ? "input-error" : ""}`;
   };
 
   const search = async () => {
