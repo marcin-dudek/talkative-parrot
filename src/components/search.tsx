@@ -30,7 +30,6 @@ const Search = () => {
   return (
     <div className="card w-96 bg-base-100 card-md shadow-sm">
       <div className="card-body">
-        <h2 className="card-title">Search</h2>
         <label className={isInputError(prefix.error)}>
           <BookA />
           <input
