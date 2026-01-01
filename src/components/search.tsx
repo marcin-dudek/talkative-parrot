@@ -8,6 +8,10 @@ const Search = () => {
     useSearchStore();
   const { update } = useResultsStore();
 
+  const isInputError = (e: string | null) => {
+    return `floating-label input ${e ? "input-error" : ""}`;
+  };
+
   const search = async () => {
     worker.onmessage = async (event) => {
       if (event.data.error) {
@@ -16,41 +20,49 @@ const Search = () => {
       }
       update(event.data.results, null);
     };
-    worker.postMessage({ prefix, length, letters });
+    worker.postMessage({
+      prefix: prefix.value,
+      length: length.value,
+      letters: letters.value,
+    });
   };
 
   return (
     <div className="card w-96 bg-base-100 card-md shadow-sm">
       <div className="card-body">
-        <label className="input">
+        <label className={isInputError(prefix.error)}>
           <BookA />
           <input
             type="text"
             className="grow"
-            placeholder="prefix"
+            placeholder="Prefix"
             onChange={(e) => setPrefix(e.target.value)}
-            value={prefix}
+            value={prefix?.value}
           />
+          <span>{prefix.error ? prefix.error : "Prefix"}</span>
         </label>
-        <label className="input">
+        <label className={isInputError(length.error)}>
           <Ruler />
           <input
             type="number"
             className="grow"
-            placeholder=""
-            value={length}
+            min={2}
+            max={15}
+            value={length?.value}
             onChange={(e) => setLength(e.target.value)}
           />
+          <span>{length.error ? length.error : "Length"}</span>
         </label>
-        <label className="input">
+        <label className={isInputError(letters.error)}>
           <ALargeSmall />
           <input
             type="text"
             className="grow"
-            placeholder="letters"
-            value={letters}
+            placeholder="Letters"
+            value={letters?.value}
             onChange={(e) => setLetters(e.target.value)}
           />
+          <span>{letters.error ? letters.error : "Letters"}</span>
         </label>
         <div className="justify-end card-actions">
           <button className="btn btn-primary" onClick={search}>
