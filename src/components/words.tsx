@@ -2,7 +2,7 @@ import { BookPlus, ChevronDown, ChevronUp } from "lucide-react";
 import useResultsStore from "../state/results";
 
 const Words = () => {
-  const { items, error, updateDefinitions, updateVisibility } =
+  const { words, error, updateDefinitions, updateVisibility } =
     useResultsStore();
 
   const wordDefinition = async (index: number, word: string) => {
@@ -13,12 +13,12 @@ const Words = () => {
 
   return (
     <>
-      {items && (
+      {words && (
         <div className="card w-96 bg-base-100 card-md shadow-sm">
           <div className="card-body">
-            <h2 className="card-title">Results ({items.length})</h2>
+            <h2 className="card-title">Results ({words.length})</h2>
             <ul className="list">
-              {items?.map((word, index) => (
+              {words.map((word, index) => (
                 <li className="list-row" key={index}>
                   <div className="w-[2em] font-thin opacity-30 tabular-nums">
                     {index + 1}
@@ -69,7 +69,7 @@ const Words = () => {
                 </li>
               )}
 
-              {!error && items && items.length === 0 && (
+              {!error && words.length === 0 && (
                 <li className="list-row">
                   <div className="list-col-grow">
                     <div>No result</div>
