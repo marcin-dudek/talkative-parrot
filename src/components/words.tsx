@@ -1,5 +1,7 @@
+import { BookPlus } from "lucide-react";
 import { useResultsStore } from "../state/results";
 import Word from "./word";
+import Row from "./row";
 
 const Words = () => {
   const { words, error } = useResultsStore();
@@ -14,6 +16,21 @@ const Words = () => {
               {words.map((word, index) => (
                 <Word key={index} index={index} word={word} />
               ))}
+
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th className="w-1/6">#</th>
+                    <th>Word</th>
+                    <th className="w-1/6"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {words.map((word, index) => (
+                    <Row key={index} index={index} word={word} />
+                  ))}
+                </tbody>
+              </table>
 
               {error && (
                 <li className="list-row">
