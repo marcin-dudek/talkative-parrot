@@ -10,48 +10,59 @@ const Word = ({ index, word }: { index: number; word: ResultItem }) => {
     updateDefinitions(index, data.definitions);
   };
 
+  const noBorderClass = (current: string) =>
+    word.definitions && word.isVisible ? current + " border-b-0" : current;
+
   return (
-    <li className="list-row">
-      <div className="w-[2em] font-thin opacity-30 tabular-nums">
-        {index + 1}
-      </div>
-      <div className="list-col-grow">
-        <div>{word.word}</div>
-      </div>
+    <>
+      <tr className={noBorderClass("")}>
+        <td className={noBorderClass("tabular-nums font-thin")}>
+          {index + 1}
+        </td>
+        <td className={noBorderClass("")}>{word.word}</td>
+        <td className={noBorderClass("")}>
+          {word.definitions ? (
+            word.isVisible ? (
+              <a
+                className="btn btn-xs btn-square btn-ghost"
+                onClick={() => updateVisibility(index, false)}
+              >
+                <ChevronUp size={12} />
+              </a>
+            ) : (
+              <a
+                className="btn btn-xs btn-square btn-ghost"
+                onClick={() => updateVisibility(index, true)}
+              >
+                <ChevronDown size={12} />
+              </a>
+            )
+          ) : (
+            <a
+              className="btn btn-xs btn-square btn-ghost"
+              onClick={() => wordDefinition(index, word.word)}
+            >
+              <BookPlus size={12} />
+            </a>
+          )}
+        </td>
+      </tr>
+
       {word.definitions && word.isVisible && (
-        <ul className="list-col-wrap list-disc text-xs">
-          {word.definitions.map((def, defIndex) => (
-            <li key={defIndex} className="text-xs">
-              {def}
-            </li>
-          ))}
-        </ul>
+        <tr className="border-t-0">
+          <td className="border-t-0"></td>
+          <td colSpan={2} className="border-t-0">
+            <ul className="list-col-wrap list-disc text-xs">
+              {word.definitions.map((def, defIndex) => (
+                <li key={defIndex} className="text-xs">
+                  {def}
+                </li>
+              ))}
+            </ul>
+          </td>
+        </tr>
       )}
-      {word.definitions ? (
-        word.isVisible ? (
-          <a
-            className="btn btn-xs btn-square btn-ghost"
-            onClick={() => updateVisibility(index, false)}
-          >
-            <ChevronUp size={12} />
-          </a>
-        ) : (
-          <a
-            className="btn btn-xs btn-square btn-ghost"
-            onClick={() => updateVisibility(index, true)}
-          >
-            <ChevronDown size={12} />
-          </a>
-        )
-      ) : (
-        <a
-          className="btn btn-xs btn-square btn-ghost"
-          onClick={() => wordDefinition(index, word.word)}
-        >
-          <BookPlus size={12} />
-        </a>
-      )}
-    </li>
+    </>
   );
 };
 

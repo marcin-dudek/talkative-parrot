@@ -42,7 +42,7 @@ const Search = () => {
   };
 
   return (
-    <div className="card bg-base-100 shadow-md w-96">
+    <div className="card bg-base-100 shadow-md w-96 card-border">
       <div className="card-body">
         <label className={inputStyle(prefix.error)}>
           <BookA />
