@@ -10,7 +10,7 @@ const Words = () => {
       {words && (
         <div className="card">
           <div className="card-body">
-            {!error && words.length > 0 &&
+            {!error && words.length > 0 && (
               <table className="table">
                 <thead>
                   <tr>
@@ -32,15 +32,15 @@ const Words = () => {
                   )}
                 </tbody>
               </table>
-            }
+            )}
 
-            {!error && words.length === 0 &&  
+            {!error && words.length === 0 && (
               <div role="alert" className="alert alert-info alert-soft">
                 <Info />
                 <span>No results.</span>
               </div>
-            }
-            
+            )}
+
             {error && (
               <div role="alert" className="alert alert-error alert-soft">
                 <ShieldAlert />

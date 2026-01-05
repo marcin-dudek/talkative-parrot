@@ -16,9 +16,7 @@ const Word = ({ index, word }: { index: number; word: ResultItem }) => {
   return (
     <>
       <tr className={noBorderClass("")}>
-        <td className={noBorderClass("tabular-nums font-thin")}>
-          {index + 1}
-        </td>
+        <td className={noBorderClass("tabular-nums font-thin")}>{index + 1}</td>
         <td className={noBorderClass("")}>{word.word}</td>
         <td className={noBorderClass("")}>
           {word.definitions ? (
