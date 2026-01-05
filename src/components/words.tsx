@@ -1,82 +1,52 @@
-import { BookPlus, ChevronDown, ChevronUp } from "lucide-react";
-import useResultsStore from "../state/results";
+import { Info, ShieldAlert } from "lucide-react";
+import { useResultsStore } from "../state/results";
+import Word from "./word";
 
 const Words = () => {
-  const { words, error, updateDefinitions, updateVisibility } =
-    useResultsStore();
-
-  const wordDefinition = async (index: number, word: string) => {
-    const response = await fetch(`/api/definition/${word}`);
-    const data = await response.json();
-    updateDefinitions(index, data.definitions);
-  };
+  const { words, error } = useResultsStore();
 
   return (
     <>
       {words && (
-        <div className="card w-96 bg-base-100 card-md shadow-sm">
+        <div className="card">
           <div className="card-body">
-            <h2 className="card-title">Results ({words.length})</h2>
-            <ul className="list">
-              {words.map((word, index) => (
-                <li className="list-row" key={index}>
-                  <div className="w-[2em] font-thin opacity-30 tabular-nums">
-                    {index + 1}
-                  </div>
-                  <div className="list-col-grow">
-                    <div>{word.word}</div>
-                  </div>
-                  {word.definitions && word.isVisible && (
-                    <ul className="list-col-wrap list-disc text-xs">
-                      {word.definitions.map((def, defIndex) => (
-                        <li key={defIndex} className="text-xs">
-                          {def}
-                        </li>
-                      ))}
-                    </ul>
+            {!error && words.length > 0 && (
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th className="w-1/6">#</th>
+                    <th>Words</th>
+                    <th className="w-1/6"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {words.map((word, index) => (
+                    <Word key={index} index={index} word={word} />
+                  ))}
+                  {words.length === 0 && (
+                    <tr>
+                      <td colSpan={3} className="text-center">
+                        No result
+                      </td>
+                    </tr>
                   )}
-                  {word.definitions ? (
-                    word.isVisible ? (
-                      <a
-                        className="btn btn-xs btn-square btn-ghost"
-                        onClick={() => updateVisibility(index, false)}
-                      >
-                        <ChevronUp size={12} />
-                      </a>
-                    ) : (
-                      <a
-                        className="btn btn-xs btn-square btn-ghost"
-                        onClick={() => updateVisibility(index, true)}
-                      >
-                        <ChevronDown size={12} />
-                      </a>
-                    )
-                  ) : (
-                    <a
-                      className="btn btn-xs btn-square btn-ghost"
-                      onClick={() => wordDefinition(index, word.word)}
-                    >
-                      <BookPlus size={12} />
-                    </a>
-                  )}
-                </li>
-              ))}
-              {error && (
-                <li className="list-row">
-                  <div className="list-col-grow">
-                    <div className="text-error">{error}</div>
-                  </div>
-                </li>
-              )}
+                </tbody>
+              </table>
+            )}
 
-              {!error && words.length === 0 && (
-                <li className="list-row">
-                  <div className="list-col-grow">
-                    <div>No result</div>
-                  </div>
-                </li>
-              )}
-            </ul>
+            {!error && words.length === 0 && (
+              <div role="alert" className="alert alert-info alert-soft">
+                <Info />
+                <span>No results.</span>
+              </div>
+            )}
+
+            {error && (
+              <div role="alert" className="alert alert-error alert-soft">
+                <ShieldAlert />
+                <span>{error}</span>
+              </div>
+            )}
           </div>
         </div>
       )}

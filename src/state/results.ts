@@ -44,4 +44,4 @@ const useResultsStore = create<Result & ResultAction>((set) => ({
     }),
 }));
 
-export default useResultsStore;
+export { useResultsStore, type ResultItem };

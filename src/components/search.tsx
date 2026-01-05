@@ -1,15 +1,29 @@
 import { ALargeSmall, BookA, Ruler } from "lucide-react";
 import useSearchStore from "../state/search";
 import worker from "./worker";
-import useResultsStore from "../state/results";
+import { useResultsStore } from "../state/results";
 
 const Search = () => {
   const { prefix, length, letters, setPrefix, setLength, setLetters } =
     useSearchStore();
   const { update } = useResultsStore();
 
-  const isInputError = (e: string | null) => {
-    return `floating-label input ${e ? "input-error" : ""}`;
+  const inputStyle = (e: string | null) => {
+    return `floating-label input mt-2 ${e ? "input-error" : ""}`;
+  };
+
+  const buttonStyle = () => {
+    if (
+      !prefix.error &&
+      !length.error &&
+      !letters.error &&
+      prefix.value !== "" &&
+      length.value !== null
+    ) {
+      return "btn btn-primary";
+    } else {
+      return "btn btn-primary btn-disabled";
+    }
   };
 
   const search = async () => {
@@ -28,9 +42,9 @@ const Search = () => {
   };
 
   return (
-    <div className="card w-96 bg-base-100 card-md shadow-sm">
+    <div className="card bg-base-100 shadow-md w-96 card-border">
       <div className="card-body">
-        <label className={isInputError(prefix.error)}>
+        <label className={inputStyle(prefix.error)}>
           <BookA />
           <input
             type="text"
@@ -41,7 +55,7 @@ const Search = () => {
           />
           <span>{prefix.error ? prefix.error : "Prefix"}</span>
         </label>
-        <label className={isInputError(length.error)}>
+        <label className={inputStyle(length.error)}>
           <Ruler />
           <input
             type="number"
@@ -53,7 +67,7 @@ const Search = () => {
           />
           <span>{length.error ? length.error : "Length"}</span>
         </label>
-        <label className={isInputError(letters.error)}>
+        <label className={inputStyle(letters.error)}>
           <ALargeSmall />
           <input
             type="text"
@@ -65,7 +79,7 @@ const Search = () => {
           <span>{letters.error ? letters.error : "Letters"}</span>
         </label>
         <div className="justify-end card-actions">
-          <button className="btn btn-primary" onClick={search}>
+          <button className={buttonStyle()} onClick={search}>
             Search
           </button>
         </div>
