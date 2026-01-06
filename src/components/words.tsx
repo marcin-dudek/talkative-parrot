@@ -16,7 +16,7 @@ const Words = () => {
                   <tr>
                     <th className="w-1/6">#</th>
                     <th>Words</th>
-                    <th className="w-1/6"></th>
+                    <th className="w-1/6">({words.length})</th>
                   </tr>
                 </thead>
                 <tbody>

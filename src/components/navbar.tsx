@@ -5,7 +5,7 @@ const NavigationMenu = () => {
   const { dark, setDark } = useThemeStore();
 
   return (
-    <div className="navbar rounded-box">
+    <div className="navbar rounded-box" role="navigation">
       <div className="navbar-start">
         <a className="btn btn-ghost text-xl" href="/">
           Word Search
@@ -23,6 +23,7 @@ const NavigationMenu = () => {
               setDark(!dark);
               localStorage.setItem("isDark", (!dark).toString());
             }}
+            aria-label="Theme switcher, dark mode and light mode."
           />
           <Moon />
         </label>
