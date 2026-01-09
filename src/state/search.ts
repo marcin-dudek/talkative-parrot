@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const wordRegex = /^\p{L}+$/u;
+const prefixRegex = /^[\p{L}.]*$/u;
 const lettersRegex = /^\p{L}*$/u;
 
 type Value<T> = {
@@ -20,11 +20,42 @@ type SearchAction = {
   setLetters: (value: string) => void;
 };
 
-const validateWord = (value: string) => {
-  const valid = wordRegex.test(value);
+const validatePrefix = (length: number, value: string) => {
+  if (value.replaceAll(".", "").length === 0) {
+    return { value: value, error: "Prefix must have letter." };
+  }
+
+  if (value.length > length) {
+    return {
+      value: value,
+      error: "Prefix cannot be longer than chosen length.",
+    };
+  }
+
+  const valid = prefixRegex.test(value);
+
   return valid
     ? { value: value, error: null }
-    : { value: value, error: "Only letters are allowed." };
+    : { value: value, error: "Only letters are allowed and dot." };
+};
+
+const validateLength = (prefix: Value<string>, length: string) => {
+  const num = parseInt(length);
+  if (isNaN(num) || num < 2 || num > 15) {
+    return { value: num, error: "Length must be between 2 and 15" };
+  }
+
+  if (prefix.value.length > num) {
+    return {
+      value: num,
+      error: "Prefix cannot be longer than chosen length.",
+    };
+  }
+
+  return {
+    value: num,
+    error: null,
+  };
 };
 
 const validateLetters = (value: string) => {
@@ -38,19 +69,10 @@ const useSearchStore = create<Search & SearchAction>((set) => ({
   prefix: { value: "", error: null },
   length: { value: 6, error: null },
   letters: { value: "", error: null },
-  setPrefix: (value) => set(() => ({ prefix: validateWord(value) })),
+  setPrefix: (value) =>
+    set((state) => ({ prefix: validatePrefix(state.length.value, value) })),
   setLength: (length) =>
-    set(() => {
-      const num = parseInt(length);
-      if (isNaN(num) || num < 2 || num > 15) {
-        return {
-          length: { value: num, error: "Length must be between 2 and 15" },
-        };
-      }
-      return {
-        length: { value: num, error: null },
-      };
-    }),
+    set((state) => ({ length: validateLength(state.prefix, length) })),
   setLetters: (value) => set(() => ({ letters: validateLetters(value) })),
 }));
 

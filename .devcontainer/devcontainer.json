@@ -11,7 +11,9 @@
       "extensions": [
         "esbenp.prettier-vscode",
         "PKief.material-icon-theme",
-        "pflannery.vscode-versionlens"
+        "pflannery.vscode-versionlens",
+        "bradlc.vscode-tailwindcss",
+        "streetsidesoftware.code-spell-checker"
       ],
       "settings": {
         "editor.tabSize": 2,
