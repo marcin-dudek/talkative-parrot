@@ -1,6 +1,6 @@
 import { Info, ShieldAlert } from "lucide-react";
 import { useResultsStore } from "../state/results";
-import Word from "./word";
+import Word from "./Word";
 
 const Words = () => {
   const { words, error } = useResultsStore();

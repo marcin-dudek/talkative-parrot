@@ -1,7 +1,7 @@
 import "./App.css";
-import NavigationMenu from "./components/navbar";
-import Search from "./components/search";
-import Words from "./components/words";
+import NavigationMenu from "./components/NavigationMenu";
+import Search from "./components/Search";
+import Words from "./components/Words";
 
 const App = () => {
   return (
