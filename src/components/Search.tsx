@@ -48,7 +48,7 @@ const Search = () => {
           <BookA />
           <input
             type="text"
-            className="grow"
+            className="grow lowercase"
             placeholder="Prefix"
             onChange={(e) => setPrefix(e.target.value)}
             value={prefix?.value}
@@ -71,7 +71,7 @@ const Search = () => {
           <ALargeSmall />
           <input
             type="text"
-            className="grow"
+            className="grow lowercase"
             placeholder="Letters"
             value={letters?.value}
             onChange={(e) => setLetters(e.target.value)}
