@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
-const prefixRegex = /^[a-z.]*$/;
-const lettersRegex = /^[a-z]*$/;
+const prefixRegex = /^[\p{L}.]*$/u;
+const lettersRegex = /^\p{L}*$/u;
 
 type Value<T> = {
   value: T;
@@ -70,13 +70,13 @@ const useSearchStore = create<Search & SearchAction>((set) => ({
   length: { value: 6, error: null },
   letters: { value: "", error: null },
   setPrefix: (value) => {
-    const sanitized = value.toLowerCase().replace(/[^a-z.]/g, "");
+    const sanitized = value.toLowerCase();
     set((state) => ({ prefix: validatePrefix(state.length.value, sanitized) }));
   },
   setLength: (length) =>
     set((state) => ({ length: validateLength(state.prefix, length) })),
   setLetters: (value) => {
-    const sanitized = value.toLowerCase().replace(/[^a-z]/g, "");
+    const sanitized = value.toLowerCase();
     set(() => ({ letters: validateLetters(sanitized) }));
   },
 }));
