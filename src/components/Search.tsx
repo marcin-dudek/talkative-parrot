@@ -88,4 +88,5 @@ const Search = () => {
   );
 };
 
+//Search.whyDidYouRender = true;
 export default Search;

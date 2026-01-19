@@ -4,7 +4,13 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [tailwindcss(), react(), cloudflare()],
+  plugins: [
+    tailwindcss(),
+    react({
+      jsxImportSource: "@welldone-software/why-did-you-render",
+    }),
+    cloudflare(),
+  ],
   worker: {
     format: "es",
   },

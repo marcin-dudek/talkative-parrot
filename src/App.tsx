@@ -10,12 +10,11 @@ const App = () => {
       <div role="main">
         <Search />
         <p className="pt-6" />
-        <div className="overflow-auto w-96">
-          <Words />
-        </div>
+        <Words />
       </div>
     </div>
   );
 };
 
+App.whyDidYouRender = true;
 export default App;

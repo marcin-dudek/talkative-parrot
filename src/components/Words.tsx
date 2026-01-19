@@ -1,37 +1,60 @@
 import { Info, ShieldAlert } from "lucide-react";
 import { useResultsStore } from "../state/results";
 import Word from "./Word";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useRef } from "react";
 
 const Words = () => {
   const { words, error } = useResultsStore();
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  const rowVirtualizer = useVirtualizer({
+    count: words?.length ?? 300,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 50,
+    overscan: 10,
+    useFlushSync: false,
+  });
 
   return (
     <>
       {words && (
         <div className="card">
-          <div className="card-body">
+          <div
+            className="card-body w-96"
+            ref={parentRef}
+            style={{
+              height: `500px`,
+              overflowY: "scroll",
+            }}
+          >
             {!error && words.length > 0 && (
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th className="w-1/6">#</th>
-                    <th>Words</th>
-                    <th className="w-1/6">({words.length})</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {words.map((word, index) => (
-                    <Word key={index} index={index} word={word} />
-                  ))}
-                  {words.length === 0 && (
-                    <tr>
-                      <td colSpan={3} className="text-center">
-                        No result
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+              <div
+                className="grid grid-cols-12 gap-2"
+                style={{
+                  height: `${rowVirtualizer.getTotalSize()}px`,
+                }}
+              >
+                <div className="col-span-1 font-bold text-center">#</div>
+                <div className="col-span-9 font-bold">Words</div>
+                <div className="col-span-2 font-bold text-center">
+                  ({words.length})
+                </div>
+                <div className="col-span-12">
+                  <hr className="border-base-content/10" />
+                </div>
+
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => (
+                  <Word
+                    key={virtualRow.index}
+                    index={virtualRow.index}
+                    word={words[virtualRow.index]}
+                  />
+                ))}
+                {words.length === 0 && (
+                  <div className="col-span-12 text-center">No result</div>
+                )}
+              </div>
             )}
 
             {!error && words.length === 0 && (
@@ -54,4 +77,5 @@ const Words = () => {
   );
 };
 
+//Words.whyDidYouRender = true;
 export default Words;
