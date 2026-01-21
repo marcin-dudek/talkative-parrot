@@ -4,9 +4,11 @@ import worker from "./worker";
 import { useResultsStore } from "../state/results";
 
 const Search = () => {
-  const { prefix, length, letters, setPrefix, setLength, setLetters } =
-    useSearchStore();
-  const { update } = useResultsStore();
+  const { prefix, length, letters } = useSearchStore();
+  const setPrefix = useSearchStore((state) => state.setPrefix);
+  const setLength = useSearchStore((state) => state.setLength);
+  const setLetters = useSearchStore((state) => state.setLetters);
+  const update = useResultsStore((state) => state.update);
 
   const inputStyle = (e: string | null) => {
     return `floating-label input mt-2 ${e ? "input-error" : ""}`;

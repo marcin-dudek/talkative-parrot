@@ -1,5 +1,6 @@
 import "./App.css";
 import NavigationMenu from "./components/NavigationMenu";
+import RowVirtualizerFixed from "./components/RowVirt";
 import Search from "./components/Search";
 import Words from "./components/Words";
 
@@ -11,6 +12,7 @@ const App = () => {
         <Search />
         <p className="pt-6" />
         <Words />
+        <RowVirtualizerFixed />
       </div>
     </div>
   );

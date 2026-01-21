@@ -9,11 +9,10 @@ const Words = () => {
   const parentRef = useRef<HTMLDivElement>(null);
 
   const rowVirtualizer = useVirtualizer({
-    count: words?.length ?? 300,
+    count: words?.length ?? 0,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 50,
     overscan: 10,
-    useFlushSync: false,
   });
 
   return (
@@ -33,6 +32,7 @@ const Words = () => {
                 className="grid grid-cols-12 gap-2"
                 style={{
                   height: `${rowVirtualizer.getTotalSize()}px`,
+                  position: "relative",
                 }}
               >
                 <div className="col-span-1 font-bold text-center">#</div>
@@ -49,6 +49,7 @@ const Words = () => {
                     key={virtualRow.index}
                     index={virtualRow.index}
                     word={words[virtualRow.index]}
+                    start={virtualRow.start + 50}
                   />
                 ))}
                 {words.length === 0 && (
