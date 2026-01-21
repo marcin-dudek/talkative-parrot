@@ -6,7 +6,7 @@ import { useResultsStore } from "../state/results";
 const Search = () => {
   const { prefix, length, letters, setPrefix, setLength, setLetters } =
     useSearchStore();
-  const { update } = useResultsStore();
+  const update = useResultsStore((state) => state.update);
 
   const inputStyle = (e: string | null) => {
     return `floating-label input mt-2 ${e ? "input-error" : ""}`;

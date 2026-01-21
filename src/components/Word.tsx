@@ -1,8 +1,10 @@
 import { BookPlus, ChevronDown, ChevronUp } from "lucide-react";
 import { useResultsStore, type ResultItem } from "../state/results";
+import { memo } from "react";
 
-const Word = ({ index, word }: { index: number; word: ResultItem }) => {
-  const { updateDefinitions, updateVisibility } = useResultsStore();
+const Word = memo(({ index, word }: { index: number; word: ResultItem }) => {
+  const updateDefinitions = useResultsStore((state) => state.updateDefinitions);
+  const updateVisibility = useResultsStore((state) => state.updateVisibility);
 
   const wordDefinition = async (index: number, word: string) => {
     const response = await fetch(`/api/definition/${word}`);
@@ -20,21 +22,16 @@ const Word = ({ index, word }: { index: number; word: ResultItem }) => {
         <td className={noBorderClass("")}>{word.word}</td>
         <td className={noBorderClass("")}>
           {word.definitions ? (
-            word.isVisible ? (
-              <a
-                className="btn btn-xs btn-square btn-ghost"
-                onClick={() => updateVisibility(index, false)}
-              >
+            <a
+              className="btn btn-xs btn-square btn-ghost"
+              onClick={() => updateVisibility(index, !word.isVisible)}
+            >
+              {word.isVisible ? (
                 <ChevronUp size={12} />
-              </a>
-            ) : (
-              <a
-                className="btn btn-xs btn-square btn-ghost"
-                onClick={() => updateVisibility(index, true)}
-              >
+              ) : (
                 <ChevronDown size={12} />
-              </a>
-            )
+              )}
+            </a>
           ) : (
             <a
               className="btn btn-xs btn-square btn-ghost"
@@ -62,6 +59,6 @@ const Word = ({ index, word }: { index: number; word: ResultItem }) => {
       )}
     </>
   );
-};
+});
 
 export default Word;
