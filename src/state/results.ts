@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
 interface ResultItem {
   word: string;
@@ -18,30 +19,26 @@ type ResultAction = {
   updateVisibility: (index: number, isVisible: boolean) => void;
 };
 
-const useResultsStore = create<Result & ResultAction>((set) => ({
-  words: null,
-  error: null,
-  update: (results: ResultItem[], error: string | null) =>
-    set(() => ({ words: [...results], error: error })),
-  updateDefinitions: (index: number, definitions: string[]) =>
-    set((state) => {
-      const items = [...(state.words ?? [])];
-      items[index] = {
-        ...items[index],
-        definitions: definitions,
-        isVisible: true,
-      };
-      return { words: items };
-    }),
-  updateVisibility: (index: number, isVisible: boolean) =>
-    set((state) => {
-      const items = [...(state.words ?? [])];
-      items[index] = {
-        ...items[index],
-        isVisible: isVisible,
-      };
-      return { words: items };
-    }),
-}));
+const useResultsStore = create<Result & ResultAction>()(
+  immer((set) => ({
+    words: null,
+    error: null,
+    update: (results: ResultItem[], error: string | null) =>
+      set(() => ({ words: [...results], error: error })),
+    updateDefinitions: (index: number, definitions: string[]) =>
+      set((state) => {
+        if (state.words) {
+          state.words[index].definitions = definitions;
+          state.words[index].isVisible = true;
+        }
+      }),
+    updateVisibility: (index: number, isVisible: boolean) =>
+      set((state) => {
+        if (state.words) {
+          state.words[index].isVisible = isVisible;
+        }
+      }),
+  })),
+);
 
 export { useResultsStore, type ResultItem };
