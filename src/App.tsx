@@ -1,4 +1,3 @@
-import "./App.css";
 import NavigationMenu from "./components/NavigationMenu";
 import Search from "./components/Search";
 import Words from "./components/Words";
