@@ -4,15 +4,7 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  plugins: [
-    tailwindcss(),
-    react({
-      babel: {
-        plugins: ["babel-plugin-react-compiler"],
-      },
-    }),
-    cloudflare(),
-  ],
+  plugins: [tailwindcss(), react(), cloudflare()],
   worker: {
     format: "es",
   },
