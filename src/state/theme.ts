@@ -25,7 +25,12 @@ type ThemeAction = {
 
 const useThemeStore = create<Theme & ThemeAction>((set) => ({
   dark: initialDark(),
-  setDark: (dark) => set(() => ({ dark: dark })),
+  setDark: (dark) =>
+    set(() => {
+      localStorage.setItem("isDark", dark.toString());
+      document.documentElement.setAttribute("data-theme", dark ? "dark" : "light"); 
+      return { dark: dark };
+    }),
 }));
 
 export default useThemeStore;

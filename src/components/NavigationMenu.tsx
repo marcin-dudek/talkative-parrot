@@ -19,10 +19,7 @@ const NavigationMenu = () => {
             value="dark"
             className="toggle theme-controller"
             checked={dark}
-            onChange={() => {
-              setDark(!dark);
-              localStorage.setItem("isDark", (!dark).toString());
-            }}
+            onChange={() => setDark(!dark)}
             aria-label="Theme switcher, dark mode and light mode."
           />
           <Moon />
