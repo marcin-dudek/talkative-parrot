@@ -1,8 +1,7 @@
 /// <reference lib="webworker" />
-import Fuse from "fuse.js";
 import { openDB } from "idb";
 
-await openDB("words-db", 3, {
+const dbPromise = openDB("words-db", 3, {
   upgrade(db) {
     if (!db.objectStoreNames.contains("words")) {
       db.createObjectStore("words", { keyPath: "length" });
@@ -11,7 +10,7 @@ await openDB("words-db", 3, {
 });
 
 const getWords = async (length: number) => {
-  const db = await openDB("words-db", 3);
+  const db = await dbPromise;
   const data = await db.get("words", length);
   if (!data) {
     const response = await fetch(`/data/${length}.json`);
@@ -28,13 +27,7 @@ const getWords = async (length: number) => {
 };
 
 const filterByPrefix = (words: string[], prefix: string) => {
-  const fuse = new Fuse(words, {
-    includeScore: true,
-    useExtendedSearch: true,
-  });
-
-  let results = fuse.search(`^${prefix}`);
-  return results.map((x) => x.item);
+  return words.filter((x) => x.startsWith(prefix));
 };
 
 self.onmessage = async (
@@ -63,9 +56,13 @@ self.onmessage = async (
     }
 
     if (event.data.letters) {
-      words = words.filter((x) =>
-        x.split("").every((char) => event.data.letters.includes(char))
-      );
+      const allowed = new Set(event.data.letters);
+      words = words.filter((word) => {
+        for (let i = 0; i < word.length; i++) {
+          if (!allowed.has(word[i])) return false;
+        }
+        return true;
+      });
     }
     self.postMessage({ results: words.map((x) => ({ word: x })) });
   } catch (error: any) {

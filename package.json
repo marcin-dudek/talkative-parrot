@@ -15,7 +15,6 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.3.2",
     "cheerio": "^1.2.0",
-    "fuse.js": "^7.4.2",
     "hono": "^4.12.29",
     "idb": "^8.0.3",
     "immer": "^11.1.11",
