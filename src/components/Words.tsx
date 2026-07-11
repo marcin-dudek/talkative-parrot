@@ -1,15 +1,9 @@
-import { useState, useEffect } from "react";
 import { Info, ShieldAlert } from "lucide-react";
 import { useResultsStore } from "../state/results";
 import Word from "./Word";
 
 const Words = () => {
   const { words, error } = useResultsStore();
-  const [limit, setLimit] = useState(100);
-
-  useEffect(() => {
-    setLimit(100);
-  }, [words]);
 
   return (
     <>
@@ -17,7 +11,6 @@ const Words = () => {
         <div className="card">
           <div className="card-body">
             {!error && words.length > 0 && (
-              <>
                 <table className="table">
                   <thead>
                     <tr>
@@ -27,7 +20,7 @@ const Words = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {words.slice(0, limit).map((word, index) => (
+                  {words.map((word, index) => (
                       <Word key={index} index={index} word={word} />
                     ))}
                     {words.length === 0 && (
@@ -39,15 +32,6 @@ const Words = () => {
                     )}
                   </tbody>
                 </table>
-                {words.length > limit && (
-                  <button
-                    className="btn btn-ghost btn-sm w-full mt-4"
-                    onClick={() => setLimit((prev) => prev + 100)}
-                  >
-                    Show More ({words.length - limit} remaining)
-                  </button>
-                )}
-              </>
             )}
 
             {!error && words.length === 0 && (
